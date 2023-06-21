@@ -1,0 +1,9 @@
+services:
+  db_postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: "etl_db"
+      POSTGRES_USER: "etl_user"
+      POSTGRES_PASSWORD: "etl_pass"
+    ports:
+      - "5433:5432"

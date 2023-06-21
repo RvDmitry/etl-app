@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: etl-app
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    default-schema: public
+    drop-first: false
+  kafka:
+    bootstrap-servers: http://localhost:29092
+    consumer:
+      auto-offset-reset: earliest
+      group-id: etl-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: my.home.etlapp.service.KafkaValueDeserializer
+      max-poll-records: 1
+      fetch-max-wait: 36000
+      enable-auto-commit: false
+      client-id: etl-app
+      enabled: true
+      topics: LEGACY_DB_UPDATE
+    listener:
+      ack-mode: manual
+      concurrency: 1
+      poll-timeout: 1800000
+  docker:
+    compose:
+      enabled: true
+      lifecycle-management: start_only
+server:
+  port: 8082
+logging:
+  level:
+    org.hibernate.sql: debug
