@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @ConditionalOnProperty("spring.kafka.consumer.enabled")
 public class Consumer {
 
-    private final Processor processor;
+    private final EventProcessor eventProcessor;
     private final Logger logger = LoggerFactory.getLogger(Consumer.class);
 
     @KafkaListener(id = "etl-group", topics = "#{'${spring.kafka.consumer.topics}'.split(',')}")
@@ -43,6 +43,6 @@ public class Consumer {
                 message
         );
         acknowledgment.acknowledge();
-        processor.startProcess(message);
+        eventProcessor.startEventProcessing(message);
     }
 }

@@ -9,10 +9,11 @@
         <sql dbms="postgresql">
             CREATE TABLE IF NOT EXISTS business (
                 id BIGSERIAL PRIMARY KEY,
+                parent_id BIGINT UNIQUE NOT NULL,
                 type TEXT NOT NULL,
                 bussines_value TEXT,
-                created_at TIMESTAMP NOT NULL DEFAULT now(),
-                updated_at TIMESTAMP NOT NULL DEFAULT now()
+                created_at TIMESTAMP NOT NULL,
+                updated_at TIMESTAMP NOT NULL
                 );
         </sql>
         <rollback>
