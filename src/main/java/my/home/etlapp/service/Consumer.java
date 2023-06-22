@@ -1,5 +1,6 @@
 package my.home.etlapp.service;
 
+import lombok.RequiredArgsConstructor;
 import my.home.etlapp.dto.MessageDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +13,11 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 @ConditionalOnProperty("spring.kafka.consumer.enabled")
 public class Consumer {
 
+    private final Processor processor;
     private final Logger logger = LoggerFactory.getLogger(Consumer.class);
 
     @KafkaListener(id = "etl-group", topics = "#{'${spring.kafka.consumer.topics}'.split(',')}")
@@ -40,5 +43,6 @@ public class Consumer {
                 message
         );
         acknowledgment.acknowledge();
+        processor.startProcess(message);
     }
 }
