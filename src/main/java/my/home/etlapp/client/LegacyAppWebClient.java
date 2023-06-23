@@ -2,7 +2,9 @@ package my.home.etlapp.client;
 
 import lombok.RequiredArgsConstructor;
 import my.home.etlapp.dto.BusinessDto;
+import my.home.etlapp.dto.RestResponsePage;
 import my.home.etlapp.entity.BusinessType;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -43,7 +45,7 @@ public class LegacyAppWebClient implements LegacyAppClient {
                         .build())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .retrieve()
-                .bodyToMono(Page.class)
+                .bodyToMono(new ParameterizedTypeReference<RestResponsePage<BusinessDto>>() {})
                 .block();
     }
 }

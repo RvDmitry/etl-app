@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.home.etlapp.client.LegacyAppClient;
 import my.home.etlapp.dto.Action;
+import my.home.etlapp.dto.BusinessDto;
 import my.home.etlapp.dto.MessageDto;
 import my.home.etlapp.entity.BusinessType;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -32,7 +34,10 @@ public class EventProcessorImpl implements EventProcessor {
 
     @Override
     public void loadData(Set<BusinessType> types, int page, int size) {
-        var temp = legacyAppClient.pageByType(types, page, size);
-        System.out.println("Getting page");
+        Page<BusinessDto> businessDtoPage = legacyAppClient.pageByType(types, page, size);
+        for (var dto : businessDtoPage.getContent()) {
+            businessService.save(dto);
+        }
+        log.debug("The data is loaded into the database");
     }
 }

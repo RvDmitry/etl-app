@@ -31,6 +31,6 @@ public class ValueTaskScheduler {
     public void loadData() {
         log.debug("Data uploading has started");
         var types = Set.of(BusinessType.TYPE4, BusinessType.TYPE5);
-        eventProcessor.loadData(types, 1, 2);
+        eventProcessor.loadData(types, 0, 10);
     }
 }
