@@ -10,6 +10,8 @@ import my.home.etlapp.entity.BusinessType;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -33,9 +35,19 @@ public class EventProcessorImpl implements EventProcessor {
     }
 
     @Override
-    public void loadData(Set<BusinessType> types, int page, int size) {
+    public void loadDataByType(Set<BusinessType> types, int page, int size) {
         Page<BusinessDto> businessDtoPage = legacyAppClient.pageByType(types, page, size);
-        for (var dto : businessDtoPage.getContent()) {
+        saveToBase(businessDtoPage.getContent());
+    }
+
+    @Override
+    public void loadDataByCreationDate(LocalDate dateFrom, LocalDate dateTo, int page, int size) {
+        Page<BusinessDto> businessDtoPage = legacyAppClient.pageByCreationDate(dateFrom, dateTo, page, size);
+        saveToBase(businessDtoPage.getContent());
+    }
+
+    private void saveToBase(List<BusinessDto> dtoList) {
+        for (var dto : dtoList) {
             businessService.save(dto);
         }
         log.debug("The data is loaded into the database");

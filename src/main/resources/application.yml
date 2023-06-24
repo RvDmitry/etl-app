@@ -59,5 +59,18 @@ feign:
         loggerLevel: full
 
 scheduler:
-  enabled: false
-  checkPeriod: 0 * * ? * *
+  by-type:
+    enabled: false
+    checkPeriod: 0 * * ? * *
+    types: TYPE4, TYPE5
+    pagination:
+      page: 0
+      size: 10
+  by-creation-date:
+    enabled: true
+    checkPeriod: 0 * * ? * *
+    dateFrom: 2023-06-10
+    dateTo: 2023-06-20
+    pagination:
+      page: 0
+      size: 10

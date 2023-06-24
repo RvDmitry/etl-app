@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.home.etlapp.entity.BusinessType;
 import my.home.etlapp.service.EventProcessor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -22,15 +23,23 @@ import java.util.Set;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@ConditionalOnProperty("scheduler.enabled")
-public class ValueTaskScheduler {
+@ConditionalOnProperty("scheduler.by-type.enabled")
+public class PageByTypeScheduler {
 
     private final EventProcessor eventProcessor;
 
-    @Scheduled(cron = "${scheduler.checkPeriod}")
+    @Value("${scheduler.by-type.pagination.page}")
+    private int page;
+
+    @Value("${scheduler.by-type.pagination.size}")
+    private int size;
+
+    @Value("${scheduler.by-type.types}")
+    private Set<BusinessType> types;
+
+    @Scheduled(cron = "${scheduler.by-type.checkPeriod}")
     public void loadData() {
         log.debug("Data uploading has started");
-        var types = Set.of(BusinessType.TYPE4, BusinessType.TYPE5);
-        eventProcessor.loadData(types, 0, 10);
+        eventProcessor.loadDataByType(types, page, size);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.StringJoiner;
 
@@ -40,6 +41,22 @@ public class LegacyAppWebClient implements LegacyAppClient {
                 .uri(uriBuilder -> uriBuilder
                         .path("/api/values/types")
                         .queryParam("types", String.join(",", joiner.toString()))
+                        .queryParam("page", page)
+                        .queryParam("size", size)
+                        .build())
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<RestResponsePage<BusinessDto>>() {})
+                .block();
+    }
+
+    @Override
+    public Page<BusinessDto> pageByCreationDate(LocalDate dateFrom, LocalDate dateTo, int page, int size) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api/values/created")
+                        .queryParam("dateFrom", dateFrom)
+                        .queryParam("dateTo", dateTo)
                         .queryParam("page", page)
                         .queryParam("size", size)
                         .build())
