@@ -67,7 +67,7 @@ scheduler:
       page: 0
       size: 10
   by-creation-date:
-    enabled: true
+    enabled: false
     checkPeriod: 0 * * ? * *
     dateFrom: 2023-06-10
     dateTo: 2023-06-20
