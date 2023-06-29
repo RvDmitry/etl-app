@@ -15,6 +15,7 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -40,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 class HandleControllerTest {
 
     @Container
@@ -59,7 +61,7 @@ class HandleControllerTest {
 
     @BeforeEach
     public void startMockServer() {
-        mockServer = startClientAndServer(8081);
+        mockServer = startClientAndServer(8083);
         var businessDto = new BusinessDto(PARENT_ID, TYPE, BUSINESS_VALUE, LocalDateTime.now(), LocalDateTime.now());
         page = new PageImpl<>(List.of(businessDto), Pageable.ofSize(1), 1);
 
@@ -72,7 +74,7 @@ class HandleControllerTest {
 
     @Test
     void testDownloadsDataFromLegacyAppByTypeAndSavesThemToDb() throws Exception {
-        new MockServerClient("localhost", 8081)
+        new MockServerClient("localhost", 8083)
                 .when(
                         request()
                                 .withMethod("GET")
@@ -97,7 +99,7 @@ class HandleControllerTest {
 
     @Test
     void testDownloadsDataFromLegacyAppByCreateAtAndSavesThemToDb() throws Exception {
-        new MockServerClient("localhost", 8081)
+        new MockServerClient("localhost", 8083)
                 .when(
                         request()
                                 .withMethod("GET")

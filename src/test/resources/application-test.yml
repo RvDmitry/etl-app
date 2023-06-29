@@ -1,0 +1,3 @@
+legacy:
+  service:
+    url: http://localhost:8083
